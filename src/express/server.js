@@ -46,13 +46,13 @@ const schema = buildSchema(`
 
 // Programatic approach to schemas
 // or instead of creating schema "User" above you can progromatically create the Schema
-const userType = new graphql.GraphQLObjectType({
-  name: 'User',
-  fields: {
-    id: { type: graphql.GraphQLString },
-    name: { type: graphql.GraphQLString }
-  }
-})
+// const userType = new graphql.GraphQLObjectType({
+//   name: 'User',
+//   fields: {
+//     id: { type: graphql.GraphQLString },
+//     name: { type: graphql.GraphQLString }
+//   }
+// })
 
 // and instead of defining query using schema you can also programatically create the query
 // const queryType = new grapql.GraphQLObjectType({
