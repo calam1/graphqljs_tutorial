@@ -11,12 +11,14 @@ const schema = buildSchema(`
   }
 
   type Query {
+    ip: String
     getMessage(id: ID!): Message
     quoteOfTheDay: String
     random: Float!
     rollThreeDice: [Int]
     rollDice(numDice: Int!, numSides: Int) : [Int]
     getDie(numSides: Int): RandomDie
+    user(id: String: User
   }
 
   type RandomDie {
@@ -35,7 +37,38 @@ const schema = buildSchema(`
     content: String
     author: String
   }
+
+  type User {
+    id: String
+    name: String
+  }
 `)
+
+// Programatic approach to schemas
+// or instead of creating schema "User" above you can progromatically create the Schema
+const userType = new graphql.GraphQLObjectType({
+  name: 'User',
+  fields: {
+    id: { type: graphql.GraphQLString },
+    name: { type: graphql.GraphQLString }
+  }
+})
+
+// and instead of defining query using schema you can also programatically create the query
+// const queryType = new grapql.GraphQLObjectType({
+//   name: Query,
+//   fields: {
+//     user: {
+//       type: userType,//defined above
+//       args: {
+//         id: { type: graphql.GraphQLString }
+//       },
+//       resolve: (_, { id }) => fakeDatabase[id]
+//     }
+//   } 
+// })
+
+// const schema = new graphql.GraphQLSchemas({ query: queryType })
 
 const Message = (id, { content, author }) => ({
   id,
@@ -58,6 +91,9 @@ const RandomDie = ({ numSides }) => ({
 })
   
 const root = {
+  ip: (args, request) => {
+    return request.ip
+  },
   quoteOfTheDay: () => {
     return Math.random() < 0.5 ? 'Take it easy' : 'Salvation lies within'
   },
@@ -97,11 +133,13 @@ const root = {
   }
 }
 
-
-
-
+const loggingMiddleware = function(req, res, next) {
+  console.log('ip:', req.ip)
+  next()
+}
 
 const app = express()
+app.use(loggingMiddleware)
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
