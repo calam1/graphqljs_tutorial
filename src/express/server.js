@@ -18,7 +18,6 @@ const schema = buildSchema(`
     rollThreeDice: [Int]
     rollDice(numDice: Int!, numSides: Int) : [Int]
     getDie(numSides: Int): RandomDie
-    user(id: String: User
   }
 
   type RandomDie {
